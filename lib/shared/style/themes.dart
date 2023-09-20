@@ -35,7 +35,7 @@ final getThemeData = {
       titleLarge: GoogleFonts.raleway(
         color: AppMainColors.whiteColor,
         fontSize: 18,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
       ),
       titleMedium: GoogleFonts.raleway(
         fontSize: 16,
