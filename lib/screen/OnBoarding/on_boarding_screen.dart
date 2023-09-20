@@ -2,6 +2,7 @@ import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/model/OnBoarding/on_boarding.dart';
 import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
@@ -39,36 +40,45 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Center(
-          child: SvgPicture.asset(
-            Assets.imagesLogo,
-            width: 24,
-            fit: BoxFit.fitHeight,
-            height: 24.h,
-            placeholderBuilder: (_) => Shimmer.fromColors(
-              baseColor: Colors.grey[850]!,
-              highlightColor: Colors.grey[800]!,
-              child: Container(
-                height: 350.h,
-                color: AppMainColors.greyColor,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppMainColors.secondColor,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppMainColors.secondColor,
+        ),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Center(
+            child: SvgPicture.asset(
+              Assets.imagesLogo,
+              width: 24,
+              fit: BoxFit.fitHeight,
+              height: 24.h,
+              placeholderBuilder: (_) => Shimmer.fromColors(
+                baseColor: Colors.grey[850]!,
+                highlightColor: Colors.grey[800]!,
+                child: Container(
+                  height: 350.h,
+                  color: AppMainColors.greyColor,
+                ),
               ),
             ),
           ),
-        ),
-        Text(
-          'Welcome to\n ChatGPT',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        SizedBox(height: 14.h),
-        Text(
-          'Ask anything, get your answer',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-      ]),
+          Text(
+            'Welcome to\n ChatGPT',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          SizedBox(height: 14.h),
+          Text(
+            'Ask anything, get your answer',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ]),
+      ),
     );
   }
 }
