@@ -1,4 +1,5 @@
 import 'package:chat_gpt/image_assets.dart';
+import 'package:chat_gpt/screen/Conversation/conversation_screen.dart';
 import 'package:chat_gpt/shared/components/my_divider.dart';
 import 'package:chat_gpt/shared/components/navigator.dart';
 import 'package:chat_gpt/shared/style/color.dart';
@@ -24,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                // navigateTo(context, widget);
+                navigateTo(context, const ConversationScreen());
               },
               child: Container(
                 margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
