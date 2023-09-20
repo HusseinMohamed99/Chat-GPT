@@ -1,6 +1,8 @@
 import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/model/OnBoarding/on_boarding.dart';
+import 'package:chat_gpt/screen/Dashboard/dashboard_screen.dart';
 import 'package:chat_gpt/shared/components/buttons.dart';
+import 'package:chat_gpt/shared/components/navigator.dart';
 import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,7 +144,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: defaultButton(
                 function: () {
                   if (isLast) {
-                    // navigateAndFinish(context, widget);
+                    navigateAndFinish(context, DashboardScreen);
                   } else {
                     pageController.nextPage(
                       duration: const Duration(
