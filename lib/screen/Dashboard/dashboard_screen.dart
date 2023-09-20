@@ -70,15 +70,21 @@ class DashboardScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const ListOfOptions(
+                  ListOfOptions(
                     imageIcon: Assets.imagesDelete,
                     text: 'Clear conversations',
+                    function: () {
+                      print('object');
+                    },
                   ),
                   SizedBox(height: 8.h),
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: ListOfOptions(
+                          function: () {
+                            print('object');
+                          },
                           imageIcon: Assets.imagesUser,
                           text: 'Upgrade to Plus',
                         ),
@@ -108,17 +114,26 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  const ListOfOptions(
+                  ListOfOptions(
+                    function: () {
+                      print('object');
+                    },
                     imageIcon: Assets.imagesSun,
                     text: 'Light mode',
                   ),
                   SizedBox(height: 8.h),
-                  const ListOfOptions(
+                  ListOfOptions(
+                    function: () {
+                      print('object');
+                    },
                     imageIcon: Assets.imagesUpdates,
                     text: 'Updates & FAQ',
                   ),
                   SizedBox(height: 8.h),
-                  const ListOfOptions(
+                  ListOfOptions(
+                    function: () {
+                      print('object');
+                    },
                     imageIcon: Assets.imagesLogout,
                     text: 'Logout',
                     textColor: AppMainColors.redColor,
@@ -141,33 +156,40 @@ class ListOfOptions extends StatelessWidget {
     required this.text,
     this.iconColor,
     this.textColor,
+    required this.function,
   });
   final String imageIcon;
   final String text;
   final Color? iconColor;
   final Color? textColor;
+  final void Function()? function;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 335.w,
-      height: 52.h,
-      alignment: Alignment.center,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          ImageIcon(
-            color: iconColor ?? AppMainColors.whiteColor,
-            AssetImage(imageIcon),
-          ),
-          SizedBox(width: 16.w),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: textColor ?? AppMainColors.whiteColor,
-                ),
-          ),
-        ],
+    return InkWell(
+      onTap: () {
+        function!();
+      },
+      child: Container(
+        width: 335.w,
+        height: 52.h,
+        alignment: Alignment.center,
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            ImageIcon(
+              color: iconColor ?? AppMainColors.whiteColor,
+              AssetImage(imageIcon),
+            ),
+            SizedBox(width: 16.w),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: textColor ?? AppMainColors.whiteColor,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
