@@ -144,7 +144,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: defaultButton(
                 function: () {
                   if (isLast) {
-                    navigateAndFinish(context, DashboardScreen);
+                    navigateAndFinish(context, const DashboardScreen());
                   } else {
                     pageController.nextPage(
                       duration: const Duration(
