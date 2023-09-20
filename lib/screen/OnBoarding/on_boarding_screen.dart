@@ -1,7 +1,6 @@
 import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/model/OnBoarding/on_boarding.dart';
 import 'package:chat_gpt/screen/Dashboard/dashboard_screen.dart';
-import 'package:chat_gpt/shared/components/buttons.dart';
 import 'package:chat_gpt/shared/components/navigator.dart';
 import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
@@ -128,33 +127,33 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ],
             ),
             SizedBox(height: 20.h),
-            Container(
-              margin: const EdgeInsetsDirectional.only(
-                start: 20,
-                end: 20,
-                bottom: 20,
-              ),
-              height: 48.h,
-              width: 335.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppMainColors.primaryColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: defaultButton(
-                function: () {
-                  if (isLast) {
-                    navigateAndFinish(context, const DashboardScreen());
-                  } else {
-                    pageController.nextPage(
-                      duration: const Duration(
-                        milliseconds: 780,
-                      ),
-                      curve: Curves.ease,
-                    );
-                  }
-                },
-                widget: isLast
+            GestureDetector(
+              onTap: () {
+                if (isLast) {
+                  navigateAndFinish(context, const DashboardScreen());
+                } else {
+                  pageController.nextPage(
+                    duration: const Duration(
+                      milliseconds: 780,
+                    ),
+                    curve: Curves.ease,
+                  );
+                }
+              },
+              child: Container(
+                margin: const EdgeInsetsDirectional.only(
+                  start: 20,
+                  end: 20,
+                  bottom: 20,
+                ),
+                height: 48.h,
+                width: 335.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppMainColors.primaryColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: isLast
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -174,7 +173,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         'Next',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                context: context,
               ),
             ),
           ]),

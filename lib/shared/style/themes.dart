@@ -11,7 +11,7 @@ final getThemeData = {
     appBarTheme: AppBarTheme(
       titleSpacing: 20.0,
       systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: AppMainColors.secondColor,
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
       ),
@@ -56,6 +56,10 @@ final getThemeData = {
         color: AppMainColors.whiteColor,
         fontWeight: FontWeight.w500,
       ),
+      bodySmall: GoogleFonts.raleway(
+          color: AppMainColors.whiteColor,
+          fontWeight: FontWeight.w600,
+          fontSize: 12),
       displayLarge: GoogleFonts.raleway(
         color: AppMainColors.whiteColor,
       ),
