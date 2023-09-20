@@ -1,4 +1,6 @@
 import 'package:chat_gpt/screen/OnBoarding/on_boarding_screen.dart';
+import 'package:chat_gpt/shared/network/cache_helper.dart';
+import 'package:chat_gpt/shared/network/dio_helper.dart';
 import 'package:chat_gpt/shared/style/enum/enum.dart';
 import 'package:chat_gpt/shared/style/themes.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   ScreenUtil.ensureScreenSize();
+  DioHelper.init();
+  await CacheHelper.init();
 
   runApp(const MyApp());
 }
