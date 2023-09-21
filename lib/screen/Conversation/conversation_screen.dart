@@ -18,7 +18,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   bool _isAiTyping = false;
-  bool _isLoading = true;
 
   void getApiKey() async {
     DatabaseReference reference = FirebaseDatabase.instance.ref();
@@ -43,9 +42,6 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.red,
       ));
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   TextEditingController textEditingController = TextEditingController();
@@ -87,129 +83,121 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Flexible(
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                controller: _listScrollController,
+                itemBuilder: ((context, index) {
+                  bool isLast = false;
+                  if (index == chatProvider.getChatList.length - 1) {
+                    isLast = true;
+                    // print(chatProvider.getChatList[index].msg);
+                  }
+                  return ChatWidget(
+                    msg: chatProvider.getChatList[index].msg,
+                    chatIndex: chatProvider.getChatList[index].chatIndex,
+                    isLast: isLast,
+                  );
+                }),
+                itemCount: chatProvider.getChatList.length,
               ),
-            )
-          : SafeArea(
-              child: Column(
+            ),
+            if (_isAiTyping) ...[
+              const Padding(
+                padding: EdgeInsets.all(15),
+                child: SpinKitThreeBounce(
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+            ],
+            Material(
+              color: AppMainColors.darkColor,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Flexible(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      controller: _listScrollController,
-                      itemBuilder: ((context, index) {
-                        bool isLast = false;
-                        if (index == chatProvider.getChatList.length - 1) {
-                          isLast = true;
-                          // print(chatProvider.getChatList[index].msg);
-                        }
-                        return ChatWidget(
-                          msg: chatProvider.getChatList[index].msg,
-                          chatIndex: chatProvider.getChatList[index].chatIndex,
-                          isLast: isLast,
-                        );
-                      }),
-                      itemCount: chatProvider.getChatList.length,
-                    ),
-                  ),
-                  if (_isAiTyping) ...[
-                    const Padding(
-                      padding: EdgeInsets.all(15),
-                      child: SpinKitThreeBounce(
-                        color: Colors.white,
-                        size: 18,
+                  Expanded(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxHeight: 100,
                       ),
-                    ),
-                  ],
-                  Material(
-                    color: AppMainColors.darkColor,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxHeight: 100,
-                            ),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              reverse: true,
-                              physics: const BouncingScrollPhysics(),
-                              child: TextField(
-                                focusNode: focusNode,
-                                cursorColor: Colors.white,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                                keyboardType: TextInputType.multiline,
-                                minLines: 1,
-                                maxLines: null,
-                                maxLength: 256,
-                                buildCounter: null,
-                                controller: textEditingController,
-                                decoration: const InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                  contentPadding: EdgeInsets.all(10),
-                                  counter: SizedBox(
-                                    height: 0,
-                                  ),
-                                  hintText: 'How can I help you?',
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          onPressed: () async {
-                            if (textEditingController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please type your query'),
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (_isAiTyping) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: TextWidget(
-                                  label: 'Please query one at a time.',
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                            }
-
-                            await sendChatMessage(
-                              modelsProvider: modelsProvider,
-                              chatProvider: chatProvider,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.send,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        reverse: true,
+                        physics: const BouncingScrollPhysics(),
+                        child: TextField(
+                          focusNode: focusNode,
+                          cursorColor: Colors.white,
+                          style: const TextStyle(
                             color: Colors.white,
                           ),
+                          keyboardType: TextInputType.multiline,
+                          minLines: 1,
+                          maxLines: null,
+                          maxLength: 256,
+                          buildCounter: null,
+                          controller: textEditingController,
+                          decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            counter: SizedBox(
+                              height: 0,
+                            ),
+                            hintText: 'How can I help you?',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    onPressed: () async {
+                      if (textEditingController.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please type your query'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (_isAiTyping) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: TextWidget(
+                            label: 'Please query one at a time.',
+                          ),
+                          backgroundColor: Colors.red,
+                        ));
+                      }
+
+                      await sendChatMessage(
+                        modelsProvider: modelsProvider,
+                        chatProvider: chatProvider,
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.send,
+                      color: Colors.white,
                     ),
                   ),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 

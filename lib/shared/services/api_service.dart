@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:chat_gpt/model/Chat/chat_model.dart';
 import 'package:http/http.dart' as http;
 
-String BASE_URL = "https://api.openai.com/v1";
-String API_KEY = "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";
-void setApiKey(String apiKey) {
-  API_KEY = apiKey;
+String baseUrl = "https://api.openai.com/v1";
+String apiKey = "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";
+void setApiKey(String key) {
+  apiKey = key;
 }
 
 class ApiService {
@@ -14,18 +14,13 @@ class ApiService {
   static int maxTokens = 100;
   static int addedContext = 2;
 
-  //The system message helps set the behavior of the bot.
-  static String systemMsg =
-      'You are Jarvis, a friendly chat bot with a bit of sense of humor who gives short and to the point answers.';
-
-  //validate if the text input isn't containing any harmful text
   static Future<bool> validateMessage({required String msg}) async {
     try {
-      Uri uri = Uri.parse('$BASE_URL/moderations');
+      Uri uri = Uri.parse('$baseUrl/moderations');
       var response = await http.post(
         uri,
         headers: {
-          'Authorization': 'Bearer $API_KEY',
+          'Authorization': 'Bearer $apiKey',
           'Content-Type': 'application/json',
         },
         body: jsonEncode({'input': msg}),
@@ -45,7 +40,6 @@ class ApiService {
 
       return isHarmful;
     } catch (error) {
-      // print('error $error');
       rethrow;
     }
   }
@@ -57,11 +51,11 @@ class ApiService {
     required List<Map<String, String>> messageBody,
   }) async {
     try {
-      Uri uri = Uri.parse('$BASE_URL/chat/completions');
+      Uri uri = Uri.parse('$baseUrl/chat/completions');
       var response = await http.post(
         uri,
         headers: {
-          'Authorization': 'Bearer $API_KEY',
+          'Authorization': 'Bearer $apiKey',
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
@@ -92,7 +86,6 @@ class ApiService {
 
       return chatList;
     } catch (error) {
-      // print('error $error');
       rethrow;
     }
   }

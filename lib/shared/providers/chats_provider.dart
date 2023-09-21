@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:chat_gpt/model/Chat/chat_model.dart';
 import 'package:chat_gpt/shared/services/api_service.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ChatProvider with ChangeNotifier {
   List<ChatModel> chatList = [];
 
   int addedContext = ApiService.addedContext;
-  String systemMsg = ApiService.systemMsg;
 
   List<ChatModel> get getChatList {
     return chatList;
@@ -51,8 +50,6 @@ class ChatProvider with ChangeNotifier {
     required double temperature,
   }) async {
     List<Map<String, String>> messages = [];
-
-    messages.add({"role": "system", "content": systemMsg});
 
     if (chatList.length - 2 * addedContext - 1 < 0) {
       for (int i = 0; i < chatList.length; i++) {
