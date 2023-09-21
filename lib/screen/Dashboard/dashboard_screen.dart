@@ -25,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                navigateTo(context, const ConversationScreen());
+                navigateTo(context, const ChatScreen());
               },
               child: Container(
                 margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),

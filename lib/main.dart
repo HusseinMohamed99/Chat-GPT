@@ -1,8 +1,10 @@
+import 'package:chat_gpt/firebase_options.dart';
 import 'package:chat_gpt/screen/OnBoarding/on_boarding_screen.dart';
 import 'package:chat_gpt/shared/providers/chats_provider.dart';
 import 'package:chat_gpt/shared/providers/models_provider.dart';
 import 'package:chat_gpt/shared/style/enum/enum.dart';
 import 'package:chat_gpt/shared/style/themes.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +12,9 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

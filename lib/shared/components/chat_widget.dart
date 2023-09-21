@@ -4,15 +4,16 @@ import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
 
 class ChatWidget extends StatelessWidget {
-  const ChatWidget(
+  ChatWidget(
       {super.key,
       required this.msg,
       required this.chatIndex,
-      this.shouldAnimate = false});
+      required this.isLast});
 
   final String msg;
   final int chatIndex;
-  final bool shouldAnimate;
+  final bool isLast;
+  bool isShown = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,58 +31,66 @@ class ChatWidget extends StatelessWidget {
                   width: 8,
                 ),
                 Expanded(
-                  child: chatIndex == 0
-                      ? TextWidget(
-                          label: msg,
-                        )
-                      : shouldAnimate
-                          ? DefaultTextStyle(
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16),
-                              child: AnimatedTextKit(
-                                  isRepeatingAnimation: false,
-                                  repeatForever: false,
-                                  displayFullTextOnTap: true,
-                                  totalRepeatCount: 1,
-                                  animatedTexts: [
-                                    TyperAnimatedText(
-                                      msg.trim(),
-                                    ),
-                                  ]),
+                  child: chatIndex != 0 // is from user
+                      ? chatIndex == 1 // is not harmful
+                          ? TextWidget(
+                              label: msg,
                             )
+                          : TextWidget(
+                              label: msg,
+                              textColor: Colors.red,
+                            )
+                      : isLast
+                          ? StatefulBuilder(builder: ((context, setState) {
+                              return isShown
+                                  ? Text(
+                                      msg.trim(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  : DefaultTextStyle(
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                      child: AnimatedTextKit(
+                                        onFinished: () {
+                                          // _animationCount = 0;
+                                          setState(
+                                            () {
+                                              isShown = true;
+                                            },
+                                          );
+                                        },
+                                        isRepeatingAnimation: false,
+                                        repeatForever: false,
+                                        displayFullTextOnTap: true,
+                                        totalRepeatCount: 1,
+                                        animatedTexts: [
+                                          TyperAnimatedText(
+                                            msg.trim(),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                            }))
                           : Text(
                               msg.trim(),
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
                             ),
                 ),
-                chatIndex == 0
-                    ? const SizedBox.shrink()
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.thumb_up_alt_outlined,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.thumb_down_alt_outlined,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
               ],
             ),
           ),
-        ),
+        )
       ],
     );
   }

@@ -1,126 +1,98 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:chat_gpt/model/Chat/chat_model.dart';
-import 'package:chat_gpt/model/Chat/models.dart';
 import 'package:http/http.dart' as http;
 
 String BASE_URL = "https://api.openai.com/v1";
 String API_KEY = "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";
+void setApiKey(String apiKey) {
+  API_KEY = apiKey;
+}
 
 class ApiService {
-  static Future<List<ModelsModel>> getModels() async {
+  static String modelName = 'gpt-3.5-turbo';
+  static int maxTokens = 100;
+  static int addedContext = 2;
+
+  //The system message helps set the behavior of the bot.
+  static String systemMsg =
+      'You are Jarvis, a friendly chat bot with a bit of sense of humor who gives short and to the point answers.';
+
+  //validate if the text input isn't containing any harmful text
+  static Future<bool> validateMessage({required String msg}) async {
     try {
-      var response = await http.get(
-        Uri.parse("$BASE_URL/models"),
-        headers: {'Authorization': 'Bearer $API_KEY'},
+      Uri uri = Uri.parse('$BASE_URL/moderations');
+      var response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $API_KEY',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'input': msg}),
       );
 
       Map jsonResponse = jsonDecode(response.body);
 
       if (jsonResponse['error'] != null) {
-        print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
-        throw HttpException(jsonResponse['error']["message"]);
+        throw HttpException(jsonResponse['error']['message']);
       }
-      print("jsonResponse $jsonResponse");
-      List temp = [];
-      for (var value in jsonResponse["data"]) {
-        temp.add(value);
-        log("temp ${value["id"]}");
+
+      bool isHarmful = false;
+
+      if (jsonResponse['results'].length > 0) {
+        isHarmful = jsonResponse['results'][0]['flagged'];
       }
-      return ModelsModel.modelsFromSnapshot(temp);
+
+      return isHarmful;
     } catch (error) {
-      log("error $error");
+      // print('error $error');
       rethrow;
     }
   }
 
   // Send Message using ChatGPT API
-  static Future<List<ChatModel>> sendMessageGPT(
-      {required String message, required String modelId}) async {
+  static Future<List<ChatModel>> sendChatMessage({
+    required String modelId,
+    required double temperature,
+    required List<Map<String, String>> messageBody,
+  }) async {
     try {
-      log("modelId $modelId");
+      Uri uri = Uri.parse('$BASE_URL/chat/completions');
       var response = await http.post(
-        Uri.parse("$BASE_URL/chat/completions"),
+        uri,
         headers: {
           'Authorization': 'Bearer $API_KEY',
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
-        body: jsonEncode(
-          {
-            "model": modelId,
-            "messages": [
-              {
-                "role": "user",
-                "content": message,
-              }
-            ]
-          },
-        ),
+        body: jsonEncode({
+          "model": modelName,
+          "messages": messageBody,
+          "temperature": temperature,
+          "max_tokens": maxTokens
+        }),
       );
 
-      Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      Map jsonResponse = jsonDecode(response.body);
+
       if (jsonResponse['error'] != null) {
-        print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
-        throw HttpException(jsonResponse['error']["message"]);
+        throw HttpException(jsonResponse['error']['message']);
       }
+
       List<ChatModel> chatList = [];
-      if (jsonResponse["choices"].length > 0) {
-        log("jsonResponse[choices]text ${jsonResponse["choices"][0]["text"]}");
+
+      if (jsonResponse['choices'].length > 0) {
         chatList = List.generate(
-          jsonResponse["choices"].length,
+          jsonResponse['choices'].length,
           (index) => ChatModel(
-            msg: jsonResponse["choices"][index]["message"]["content"],
-            chatIndex: 1,
+            msg: jsonResponse['choices'][index]['message']['content'],
+            chatIndex: 0,
           ),
         );
       }
+
       return chatList;
     } catch (error) {
-      log("error $error");
-      rethrow;
-    }
-  }
-
-  // Send Message fct
-  static Future<List<ChatModel>> sendMessage(
-      {required String message, required String modelId}) async {
-    try {
-      log("modelId $modelId");
-      var response = await http.post(
-        Uri.parse("$BASE_URL/completions"),
-        headers: {
-          'Authorization': 'Bearer $API_KEY',
-          "Content-Type": "application/json"
-        },
-        body: jsonEncode(
-          {
-            "model": modelId,
-            "prompt": message,
-            "max_tokens": 300,
-          },
-        ),
-      );
-
-      Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      if (jsonResponse['error'] != null) {
-        print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
-        throw HttpException(jsonResponse['error']["message"]);
-      }
-      List<ChatModel> chatList = [];
-      if (jsonResponse["choices"].length > 0) {
-        log("jsonResponse[choices]text ${jsonResponse["choices"][0]["text"]}");
-        chatList = List.generate(
-          jsonResponse["choices"].length,
-          (index) => ChatModel(
-            msg: jsonResponse["choices"][index]["text"],
-            chatIndex: 1,
-          ),
-        );
-      }
-      return chatList;
-    } catch (error) {
-      log("error $error");
+      // print('error $error');
       rethrow;
     }
   }
