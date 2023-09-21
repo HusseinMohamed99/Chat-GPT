@@ -1,7 +1,6 @@
 import 'package:chat_gpt/model/Chat/chat_model.dart';
-import 'package:flutter/cupertino.dart';
-
-import '../services/api_service.dart';
+import 'package:chat_gpt/shared/services/api_service.dart';
+import 'package:flutter/material.dart';
 
 class ChatProvider with ChangeNotifier {
   List<ChatModel> chatList = [];
