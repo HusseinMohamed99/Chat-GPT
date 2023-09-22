@@ -1,7 +1,7 @@
 # AI Chat GPT App
 
 Developed a chatbot app using Flutter and OpenAI's GPT-3 language model.
-The app can answer questions, generate text, and translate languages.
+The app can answer questions, and generate text.
 The app is still under development, but it has the potential to be a valuable tool for customer service, education, and entertainment.
 
 ## Download The App![GitHub All Releases](https://img.shields.io/github/downloads/HusseinMohamed99/Chat_GPT/total?color=green)
