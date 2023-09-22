@@ -1,12 +1,18 @@
+import 'dart:developer';
+
+import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/shared/components/chat_widget.dart';
+import 'package:chat_gpt/shared/components/my_divider.dart';
+import 'package:chat_gpt/shared/components/navigator.dart';
+import 'package:chat_gpt/shared/components/text_form_field.dart';
 import 'package:chat_gpt/shared/components/text_widget.dart';
 import 'package:chat_gpt/shared/providers/chats_provider.dart';
 import 'package:chat_gpt/shared/providers/models_provider.dart';
-import 'package:chat_gpt/shared/services/api_service.dart';
 import 'package:chat_gpt/shared/style/color.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -17,42 +23,16 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  bool _isAiTyping = false;
+  bool _isTyping = false;
 
-  void getApiKey() async {
-    DatabaseReference reference = FirebaseDatabase.instance.ref();
-
-    final snapshot = await reference.child('api').get();
-
-    if (snapshot.exists) {
-      setApiKey(snapshot.value.toString());
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'Could not fetch Api Key. Please try again.',
-        ),
-        action: SnackBarAction(
-          label: 'Try Again',
-          textColor: Colors.white,
-          onPressed: (() {
-            getApiKey();
-          }),
-        ),
-        duration: const Duration(seconds: 5),
-        backgroundColor: Colors.red,
-      ));
-    }
-  }
-
-  TextEditingController textEditingController = TextEditingController();
-  late FocusNode focusNode;
+  late TextEditingController textEditingController;
   late ScrollController _listScrollController;
-
+  late FocusNode focusNode;
   @override
   void initState() {
     _listScrollController = ScrollController();
+    textEditingController = TextEditingController();
     focusNode = FocusNode();
-    getApiKey();
     super.initState();
   }
 
@@ -64,187 +44,181 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  // List<ChatModel> chatList = [];
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     final modelsProvider = Provider.of<ModelsProvider>(context);
     final chatProvider = Provider.of<ChatProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
-        elevation: 2,
-        title: const Text(
-          'Chat Bot',
-          style: TextStyle(),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+        elevation: 0,
+        leadingWidth: double.infinity,
+        automaticallyImplyLeading: false,
+        leading: Container(
+          width: 335,
+          height: 64,
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(),
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    padding: EdgeInsetsDirectional.zero,
+                    icon: const ImageIcon(AssetImage(Assets.imagesArrowBack)),
+                    onPressed: () {
+                      pop(context);
+                    },
+                  ),
+                  Text(
+                    'Back',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const Spacer(),
+                  SvgPicture.asset(Assets.imagesLogo),
+                  const SizedBox(width: 5),
+                ],
+              ),
+              const MyDivider(),
+            ],
           ),
-        ],
+        ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                controller: _listScrollController,
-                itemBuilder: ((context, index) {
-                  bool isLast = false;
-                  if (index == chatProvider.getChatList.length - 1) {
-                    isLast = true;
-                    // print(chatProvider.getChatList[index].msg);
-                  }
-                  return ChatWidget(
-                    msg: chatProvider.getChatList[index].msg,
-                    chatIndex: chatProvider.getChatList[index].chatIndex,
-                    isLast: isLast,
-                  );
-                }),
-                itemCount: chatProvider.getChatList.length,
-              ),
-            ),
-            if (_isAiTyping) ...[
-              const Padding(
-                padding: EdgeInsets.all(15),
-                child: SpinKitThreeBounce(
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ],
-            Material(
-              color: AppMainColors.darkColor,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxHeight: 100,
+        child: Form(
+          key: formKey,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: chatProvider.chatList.isEmpty
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
+              children: [
+                chatProvider.chatList.isEmpty ? const Spacer() : Container(),
+                chatProvider.chatList.isEmpty
+                    ? Text(
+                        'Ask anything, get your answer',
+                        textAlign: TextAlign.center,
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppMainColors.whiteColor
+                                      .withOpacity(0.4000000059604645),
+                                ),
+                      )
+                    : Flexible(
+                        child: ListView.builder(
+                            controller: _listScrollController,
+                            itemCount: chatProvider
+                                .getChatList.length, //chatList.length,
+                            itemBuilder: (context, index) {
+                              return ChatWidget(
+                                msg: chatProvider.getChatList[index]
+                                    .msg, // chatList[index].msg,
+                                chatIndex: chatProvider.getChatList[index]
+                                    .chatIndex, //chatList[index].chatIndex,
+                                shouldAnimate:
+                                    chatProvider.getChatList.length - 1 ==
+                                        index,
+                              );
+                            }),
                       ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        reverse: true,
-                        physics: const BouncingScrollPhysics(),
-                        child: TextField(
-                          focusNode: focusNode,
-                          cursorColor: Colors.white,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          keyboardType: TextInputType.multiline,
-                          minLines: 1,
-                          maxLines: null,
-                          maxLength: 256,
-                          buildCounter: null,
-                          controller: textEditingController,
-                          decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            contentPadding: EdgeInsets.all(10),
-                            counter: SizedBox(
-                              height: 0,
-                            ),
-                            hintText: 'How can I help you?',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                if (_isTyping) ...[
+                  Container(
+                    width: 61,
+                    height: 43,
+                    padding: const EdgeInsets.all(12),
+                    decoration: ShapeDecoration(
+                      color: Colors.white.withOpacity(0.20000000298023224),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    onPressed: () async {
-                      if (textEditingController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please type your query'),
-                          ),
-                        );
-                        return;
-                      }
-
-                      if (_isAiTyping) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: TextWidget(
-                            label: 'Please query one at a time.',
-                          ),
-                          backgroundColor: Colors.red,
-                        ));
-                      }
-
-                      await sendChatMessage(
-                        modelsProvider: modelsProvider,
-                        chatProvider: chatProvider,
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.send,
+                    child: const SpinKitThreeBounce(
                       color: Colors.white,
+                      size: 18,
                     ),
                   ),
                 ],
-              ),
-            ),
-          ],
+                const SizedBox(
+                  height: 15,
+                ),
+                DefaultTextFormField(
+                  controller: textEditingController,
+                  keyboardType: TextInputType.multiline,
+                  suffixPressed: () async {
+                    await sendMessageFCT(
+                        modelsProvider: modelsProvider,
+                        chatProvider: chatProvider);
+                  },
+                  validate: (String? value) {
+                    if (value!.trim().isEmpty) {
+                      return "Please type a message";
+                    }
+                    return null;
+                  },
+                  hint: '',
+                  suffix: const AssetImage(Assets.imagesSend),
+                ),
+              ]),
         ),
       ),
     );
   }
 
-  void scrollListToEnd() {
+  void scrollListToEND() {
     _listScrollController.animateTo(
-      _listScrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 2),
-      curve: Curves.easeOut,
-    );
+        _listScrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 2),
+        curve: Curves.easeOut);
   }
 
-  Future<void> sendChatMessage({
-    required ModelsProvider modelsProvider,
-    required ChatProvider chatProvider,
-  }) async {
-    String temp = textEditingController.text;
+  Future<void> sendMessageFCT(
+      {required ModelsProvider modelsProvider,
+      required ChatProvider chatProvider}) async {
+    if (_isTyping) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: TextWidget(
+            label: "You cant send multiple messages at a time",
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    if (textEditingController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: TextWidget(
+            label: "Please type a message",
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
     try {
-      setState(
-        () {
-          _isAiTyping = true;
-          textEditingController.clear();
-          chatProvider.addUserMessage(msg: temp);
-          focusNode.unfocus();
-        },
-      );
-
-      bool isHarmful = await ApiService.validateMessage(msg: temp);
-
-      if (isHarmful) {
-        setState(
-          () {
-            chatProvider.addHarmfulMessage(msg: temp);
-          },
-        );
-
-        throw Exception(
-            "Please be careful. Your query violates OpenAI's usage policies.");
-      }
-
+      String msg = textEditingController.text;
+      setState(() {
+        _isTyping = true;
+        chatProvider.addUserMessage(msg: msg);
+        textEditingController.clear();
+        focusNode.unfocus();
+      });
       await chatProvider.sendMessageAndGetAnswers(
-        msg: temp,
-        modelId: modelsProvider.modelId,
-        temperature: modelsProvider.getTemperature,
-      );
-
+          msg: msg, chosenModelId: modelsProvider.getCurrentModel);
       setState(() {});
     } catch (error) {
+      log("error $error");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: TextWidget(
           label: error.toString(),
@@ -253,8 +227,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ));
     } finally {
       setState(() {
-        scrollListToEnd();
-        _isAiTyping = false;
+        scrollListToEND();
+        _isTyping = false;
       });
     }
   }
