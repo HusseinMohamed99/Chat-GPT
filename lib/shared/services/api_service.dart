@@ -6,8 +6,8 @@ import 'package:chat_gpt/model/Chat/models.dart';
 import 'package:http/http.dart' as http;
 
 String baseUrl = "https://api.openai.com/v1";
+// Change ApiKey Every Day!!
 String apiKey = "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";
-//    "max_tokens": 7,
 
 class ApiService {
   static Future<List<ModelsModel>> getModels() async {
