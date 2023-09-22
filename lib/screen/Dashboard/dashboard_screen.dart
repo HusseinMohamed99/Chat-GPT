@@ -85,21 +85,27 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
                             itemCount: chatProvider
                                 .getChatList.length, //chatList.length,
                             itemBuilder: (context, index) {
-                              return ChatWidget(
-                                msg: chatProvider.getChatList[index]
-                                    .msg, // chatList[index].msg,
-                                chatIndex: chatProvider.getChatList[index]
-                                    .chatIndex, //chatList[index].chatIndex,
-                                shouldAnimate:
-                                    chatProvider.getChatList.length - 1 ==
-                                        index,
-                              );
+                              if (chatProvider.getChatList[index].chatIndex ==
+                                  0) {
+                                return DashboardChatList(
+                                  msg: chatProvider.getChatList[index].msg,
+                                  // chatList[index].msg,
+                                  chatIndex: chatProvider.getChatList[index]
+                                      .chatIndex, //chatList[index].chatIndex,);
+                                  shouldAnimate:
+                                      chatProvider.getChatList.length - 1 ==
+                                          index,
+                                );
+                              }
+                              return const SizedBox.shrink();
                             }),
                       ),
-                      const Spacer(),
                       const ImageIcon(
                         color: AppMainColors.whiteColor,
                         AssetImage(Assets.imagesArrowForward2),

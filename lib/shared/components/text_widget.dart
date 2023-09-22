@@ -8,16 +8,19 @@ class TextWidget extends StatelessWidget {
     this.fontSize,
     this.textColor,
     this.fontWeight,
+    this.maxLine,
   }) : super(key: key);
 
   final String label;
   final double? fontSize;
   final Color? textColor;
   final FontWeight? fontWeight;
+  final int? maxLine;
   @override
   Widget build(BuildContext context) {
     return Text(
       label,
+      maxLines: maxLine,
       style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: textColor ?? AppMainColors.whiteColor,
             fontSize: fontSize,

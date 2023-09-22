@@ -1,14 +1,43 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/shared/components/text_widget.dart';
 import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class DashboardChatList extends StatelessWidget {
+  const DashboardChatList({
+    super.key,
+    required this.msg,
+    required this.chatIndex,
+    this.shouldAnimate = false,
+  });
+  final String msg;
+  final int chatIndex;
+  final bool shouldAnimate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: TextWidget(
+        maxLine: 1,
+        label: msg,
+        textColor: AppMainColors.whiteColor,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
 
 class ChatWidget extends StatelessWidget {
-  const ChatWidget(
-      {super.key,
-      required this.msg,
-      required this.chatIndex,
-      this.shouldAnimate = false});
+  const ChatWidget({
+    super.key,
+    required this.msg,
+    required this.chatIndex,
+    this.shouldAnimate = false,
+  });
 
   final String msg;
   final int chatIndex;
@@ -18,65 +47,25 @@ class ChatWidget extends StatelessWidget {
     if (chatIndex == 0) {
       // For User
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Material(
-            color: AppMainColors.greyColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: chatIndex == 0
-                        ? TextWidget(
-                            label: msg,
-                          )
-                        : shouldAnimate
-                            ? DefaultTextStyle(
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16),
-                                child: AnimatedTextKit(
-                                    isRepeatingAnimation: false,
-                                    repeatForever: false,
-                                    displayFullTextOnTap: true,
-                                    totalRepeatCount: 1,
-                                    animatedTexts: [
-                                      TyperAnimatedText(
-                                        msg.trim(),
-                                      ),
-                                    ]),
-                              )
-                            : Text(
-                                msg.trim(),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16),
-                              ),
-                  ),
-                  chatIndex == 0
-                      ? const SizedBox.shrink()
-                      : const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.thumb_up_alt_outlined,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.thumb_down_alt_outlined,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                ],
+          Container(
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(left: 40),
+            decoration: ShapeDecoration(
+              color: AppMainColors.primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ).r,
               ),
+            ),
+            child: TextWidget(
+              label: msg,
+              textColor: AppMainColors.whiteColor,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -84,66 +73,75 @@ class ChatWidget extends StatelessWidget {
     } else {
       // For Bot
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Material(
-            color: AppMainColors.redColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: chatIndex == 0
-                        ? TextWidget(
-                            label: msg,
-                          )
-                        : shouldAnimate
-                            ? DefaultTextStyle(
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16),
-                                child: AnimatedTextKit(
-                                    isRepeatingAnimation: false,
-                                    repeatForever: false,
-                                    displayFullTextOnTap: true,
-                                    totalRepeatCount: 1,
-                                    animatedTexts: [
-                                      TyperAnimatedText(
-                                        msg.trim(),
-                                      ),
-                                    ]),
-                              )
-                            : Text(
-                                msg.trim(),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16),
-                              ),
-                  ),
-                  chatIndex == 0
-                      ? const SizedBox.shrink()
-                      : const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.thumb_up_alt_outlined,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.thumb_down_alt_outlined,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                ],
+          Container(
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(right: 40),
+            decoration: ShapeDecoration(
+              color: AppMainColors.whiteColor.withOpacity(0.20),
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ).r,
               ),
             ),
+            child: shouldAnimate
+                ? DefaultTextStyle(
+                    style: GoogleFonts.raleway(
+                      color: AppMainColors.whiteColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                    child: AnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        repeatForever: false,
+                        displayFullTextOnTap: true,
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TyperAnimatedText(
+                            msg,
+                          ),
+                        ]),
+                  )
+                : TextWidget(
+                    label: msg,
+                    textColor: AppMainColors.whiteColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ImageIcon(
+                AssetImage(Assets.imagesLike),
+                color: AppMainColors.greyColor,
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              const ImageIcon(
+                AssetImage(Assets.imagesDisLike),
+                color: AppMainColors.greyColor,
+              ),
+              const SizedBox(
+                width: 41,
+              ),
+              const ImageIcon(
+                AssetImage(Assets.imagesCopy),
+                color: AppMainColors.greyColor,
+              ),
+              Text(
+                'Copy',
+                style: Theme.of(context).textTheme.labelSmall,
+              )
+            ],
           ),
         ],
       );

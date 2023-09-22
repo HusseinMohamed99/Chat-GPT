@@ -50,7 +50,7 @@ final getThemeData = {
       labelSmall: GoogleFonts.raleway(
         color: AppMainColors.whiteColor,
         fontSize: 14,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
       bodyMedium: GoogleFonts.raleway(
         color: AppMainColors.whiteColor,

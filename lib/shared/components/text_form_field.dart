@@ -24,7 +24,7 @@ class DefaultTextFormField extends StatelessWidget {
     return Container(
       width: 335.w,
       height: 52,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: TextFormField(
         cursorColor: AppMainColors.whiteColor,
         onTapOutside: (event) {
