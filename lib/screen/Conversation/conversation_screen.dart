@@ -89,87 +89,86 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Form(
-          key: formKey,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: chatProvider.chatList.isEmpty
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
-              children: [
-                chatProvider.chatList.isEmpty ? const Spacer() : Container(),
-                chatProvider.chatList.isEmpty
-                    ? Text(
-                        'Ask anything, get your answer',
-                        textAlign: TextAlign.center,
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppMainColors.whiteColor
-                                      .withOpacity(0.4000000059604645),
-                                ),
-                      )
-                    : Flexible(
-                        child: ListView.builder(
-                            controller: _listScrollController,
-                            itemCount: chatProvider
-                                .getChatList.length, //chatList.length,
-                            itemBuilder: (context, index) {
-                              return ChatWidget(
-                                msg: chatProvider.getChatList[index]
-                                    .msg, // chatList[index].msg,
-                                chatIndex: chatProvider.getChatList[index]
-                                    .chatIndex, //chatList[index].chatIndex,
-                                shouldAnimate:
-                                    chatProvider.getChatList.length - 1 ==
-                                        index,
-                              );
-                            }),
-                      ),
-                if (_isTyping) ...[
-                  Container(
-                    width: 61,
-                    height: 43,
-                    padding: const EdgeInsets.all(12),
-                    decoration: ShapeDecoration(
-                      color: Colors.white.withOpacity(0.20000000298023224),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                          bottomRight: Radius.circular(8),
-                        ),
+      body: Form(
+        key: formKey,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: chatProvider.chatList.isEmpty
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
+            children: [
+              chatProvider.chatList.isEmpty
+                  ? Text(
+                      'Ask anything, get your answer',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppMainColors.whiteColor
+                                .withOpacity(0.4000000059604645),
+                          ),
+                    )
+                  : Flexible(
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        controller: _listScrollController,
+                        itemCount:
+                            chatProvider.getChatList.length, //chatList.length,
+                        itemBuilder: (context, index) {
+                          return ChatWidget(
+                            msg: chatProvider
+                                .getChatList[index].msg, // chatList[index].msg,
+                            chatIndex: chatProvider.getChatList[index]
+                                .chatIndex, //chatList[index].chatIndex,
+                            shouldAnimate:
+                                chatProvider.getChatList.length - 1 == index,
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 8.h),
                       ),
                     ),
-                    child: const SpinKitThreeBounce(
-                      color: Colors.white,
-                      size: 18,
+              if (_isTyping) ...[
+                Container(
+                  width: 61,
+                  height: 43,
+                  padding: const EdgeInsets.all(12),
+                  decoration: ShapeDecoration(
+                    color: Colors.white.withOpacity(0.20000000298023224),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
                     ),
                   ),
-                ],
-                const SizedBox(
-                  height: 15,
+                  child: const SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
-                DefaultTextFormField(
-                  controller: textEditingController,
-                  keyboardType: TextInputType.multiline,
-                  suffixPressed: () async {
-                    await sendMessageFCT(
-                        modelsProvider: modelsProvider,
-                        chatProvider: chatProvider);
-                  },
-                  validate: (String? value) {
-                    if (value!.trim().isEmpty) {
-                      return "Please type a message";
-                    }
-                    return null;
-                  },
-                  hint: '',
-                  suffix: const AssetImage(Assets.imagesSend),
-                ),
-              ]),
-        ),
+              ],
+              const SizedBox(
+                height: 15,
+              ),
+              DefaultTextFormField(
+                controller: textEditingController,
+                keyboardType: TextInputType.multiline,
+                suffixPressed: () async {
+                  await sendMessageFCT(
+                      modelsProvider: modelsProvider,
+                      chatProvider: chatProvider);
+                },
+                validate: (String? value) {
+                  if (value!.trim().isEmpty) {
+                    return "Please type a message";
+                  }
+                  return null;
+                },
+                hint: '',
+                suffix: const AssetImage(Assets.imagesSend),
+              ),
+            ]),
       ),
     );
   }

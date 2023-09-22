@@ -1,17 +1,22 @@
 import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/screen/Conversation/conversation_screen.dart';
+import 'package:chat_gpt/shared/components/chat_widget.dart';
 import 'package:chat_gpt/shared/components/my_divider.dart';
 import 'package:chat_gpt/shared/components/navigator.dart';
+import 'package:chat_gpt/shared/providers/chats_provider.dart';
 import 'package:chat_gpt/shared/style/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(),
       child: Scaffold(
@@ -57,6 +62,53 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             const MyDivider(horizontal: 20),
+            if (chatProvider.getChatList.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  navigateTo(context, const ChatScreen());
+                },
+                child: Container(
+                  margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+                  height: 52.h,
+                  width: 335.w,
+                  decoration: BoxDecoration(
+                      color: AppMainColors.darkColor,
+                      borderRadius: BorderRadius.circular(1)),
+                  child: Row(
+                    children: [
+                      const ImageIcon(
+                        color: AppMainColors.whiteColor,
+                        AssetImage(Assets.imagesMessage),
+                      ),
+                      SizedBox(
+                        width: 16.w,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: chatProvider
+                                .getChatList.length, //chatList.length,
+                            itemBuilder: (context, index) {
+                              return ChatWidget(
+                                msg: chatProvider.getChatList[index]
+                                    .msg, // chatList[index].msg,
+                                chatIndex: chatProvider.getChatList[index]
+                                    .chatIndex, //chatList[index].chatIndex,
+                                shouldAnimate:
+                                    chatProvider.getChatList.length - 1 ==
+                                        index,
+                              );
+                            }),
+                      ),
+                      const Spacer(),
+                      const ImageIcon(
+                        color: AppMainColors.whiteColor,
+                        AssetImage(Assets.imagesArrowForward2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            const MyDivider(horizontal: 20),
             const Spacer(),
             const MyDivider(),
             Container(
@@ -74,7 +126,7 @@ class DashboardScreen extends StatelessWidget {
                     imageIcon: Assets.imagesDelete,
                     text: 'Clear conversations',
                     function: () {
-                      print('object');
+                      print('conversations');
                     },
                   ),
                   SizedBox(height: 8.h),
@@ -83,7 +135,7 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: ListOfOptions(
                           function: () {
-                            print('object');
+                            print('Upgrade');
                           },
                           imageIcon: Assets.imagesUser,
                           text: 'Upgrade to Plus',
@@ -116,7 +168,7 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('object');
+                      print('mode');
                     },
                     imageIcon: Assets.imagesSun,
                     text: 'Light mode',
@@ -124,7 +176,7 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('object');
+                      print('Updates');
                     },
                     imageIcon: Assets.imagesUpdates,
                     text: 'Updates & FAQ',
@@ -132,7 +184,7 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('object');
+                      print('Logout');
                     },
                     imageIcon: Assets.imagesLogout,
                     text: 'Logout',

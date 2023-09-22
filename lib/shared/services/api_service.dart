@@ -6,7 +6,7 @@ import 'package:chat_gpt/model/Chat/models.dart';
 import 'package:http/http.dart' as http;
 
 String baseUrl = "https://api.openai.com/v1";
-String apiKey = "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";
+String apiKey = "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";
 
 class ApiService {
   static Future<List<ModelsModel>> getModels() async {
@@ -19,10 +19,8 @@ class ApiService {
       Map jsonResponse = jsonDecode(response.body);
 
       if (jsonResponse['error'] != null) {
-        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
         throw HttpException(jsonResponse['error']["message"]);
       }
-      // print("jsonResponse $jsonResponse");
       List temp = [];
       for (var value in jsonResponse["data"]) {
         temp.add(value);
@@ -62,12 +60,10 @@ class ApiService {
       // Map jsonResponse = jsonDecode(response.body);
       Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
-        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
         throw HttpException(jsonResponse['error']["message"]);
       }
       List<ChatModel> chatList = [];
       if (jsonResponse["choices"].length > 0) {
-        // log("jsonResponse[choices]text ${jsonResponse["choices"][0]["text"]}");
         chatList = List.generate(
           jsonResponse["choices"].length,
           (index) => ChatModel(
@@ -103,16 +99,12 @@ class ApiService {
         ),
       );
 
-      // Map jsonResponse = jsonDecode(response.body);
-
       Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
-        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
         throw HttpException(jsonResponse['error']["message"]);
       }
       List<ChatModel> chatList = [];
       if (jsonResponse["choices"].length > 0) {
-        // log("jsonResponse[choices]text ${jsonResponse["choices"][0]["text"]}");
         chatList = List.generate(
           jsonResponse["choices"].length,
           (index) => ChatModel(
