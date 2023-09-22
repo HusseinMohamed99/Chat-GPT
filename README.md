@@ -1,5 +1,8 @@
 # Chat GPT
 
+## Download The App![GitHub All Releases](https://img.shields.io/github/downloads/HusseinMohamed99/Chat-GPT/total?color=green)
+<a href="https://github.com/HusseinMohamed99/Chat-GPT/releases/download/v1.0.0/ChatGPT.apk"><img src="https://playerzon.com/asset/download.png" width="200"></img></a>
+
 <p>
   <img src="https://github.com/HusseinMohamed99/Chat-GPT/assets/84459939/ea7bd782-9518-4159-abf8-c31c82f58cf9" width="250" />
   <img src="https://github.com/HusseinMohamed99/Chat-GPT/assets/84459939/36b723ae-800e-4b53-b950-4381cb8d2dee" width="250" />
