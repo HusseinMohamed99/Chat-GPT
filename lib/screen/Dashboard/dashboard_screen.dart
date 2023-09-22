@@ -5,6 +5,7 @@ import 'package:chat_gpt/shared/components/my_divider.dart';
 import 'package:chat_gpt/shared/components/navigator.dart';
 import 'package:chat_gpt/shared/providers/chats_provider.dart';
 import 'package:chat_gpt/shared/style/color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +31,7 @@ class DashboardScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                navigateTo(context, const ChatScreen());
+                navigateTo(context, const ConversationScreen());
               },
               child: Container(
                 margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
@@ -65,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
             if (chatProvider.getChatList.isNotEmpty)
               GestureDetector(
                 onTap: () {
-                  navigateTo(context, const ChatScreen());
+                  navigateTo(context, const ConversationScreen());
                 },
                 child: Container(
                   margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
@@ -132,7 +133,9 @@ class DashboardScreen extends StatelessWidget {
                     imageIcon: Assets.imagesDelete,
                     text: 'Clear conversations',
                     function: () {
-                      print('conversations');
+                      if (kDebugMode) {
+                        print('conversations');
+                      }
                     },
                   ),
                   SizedBox(height: 8.h),
@@ -141,7 +144,9 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: ListOfOptions(
                           function: () {
-                            print('Upgrade');
+                            if (kDebugMode) {
+                              print('Upgrade');
+                            }
                           },
                           imageIcon: Assets.imagesUser,
                           text: 'Upgrade to Plus',
@@ -174,7 +179,9 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('mode');
+                      if (kDebugMode) {
+                        print('mode');
+                      }
                     },
                     imageIcon: Assets.imagesSun,
                     text: 'Light mode',
@@ -182,7 +189,9 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('Updates');
+                      if (kDebugMode) {
+                        print('Updates');
+                      }
                     },
                     imageIcon: Assets.imagesUpdates,
                     text: 'Updates & FAQ',
@@ -190,7 +199,9 @@ class DashboardScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   ListOfOptions(
                     function: () {
-                      print('Logout');
+                      if (kDebugMode) {
+                        print('Logout');
+                      }
                     },
                     imageIcon: Assets.imagesLogout,
                     text: 'Logout',

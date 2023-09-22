@@ -6,6 +6,7 @@ import 'package:chat_gpt/model/Chat/models.dart';
 import 'package:http/http.dart' as http;
 
 String baseUrl = "https://api.openai.com/v1";
+
 // Change ApiKey Every Hour!!
 String apiKey = "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";
 
@@ -25,7 +26,6 @@ class ApiService {
       List temp = [];
       for (var value in jsonResponse["data"]) {
         temp.add(value);
-        // log("temp ${value["id"]}");
       }
       return ModelsModel.modelsFromSnapshot(temp);
     } catch (error) {
@@ -59,7 +59,6 @@ class ApiService {
         ),
       );
 
-      // Map jsonResponse = jsonDecode(response.body);
       Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
         throw HttpException(jsonResponse['error']["message"]);

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_gpt/image_assets.dart';
 import 'package:chat_gpt/shared/components/chat_widget.dart';
 import 'package:chat_gpt/shared/components/my_divider.dart';
@@ -15,14 +13,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ConversationScreen extends StatefulWidget {
+  const ConversationScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ConversationScreen> createState() => _ConversationScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ConversationScreenState extends State<ConversationScreen> {
   bool _isTyping = false;
 
   late TextEditingController textEditingController;
@@ -44,7 +42,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  // List<ChatModel> chatList = [];
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -198,7 +195,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     height: 43,
                     padding: const EdgeInsets.all(12),
                     decoration: ShapeDecoration(
-                      color: Colors.white.withOpacity(0.20000000298023224),
+                      color: AppMainColors.whiteColor
+                          .withOpacity(0.20000000298023224),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8),
@@ -208,7 +206,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     child: const SpinKitThreeBounce(
-                      color: Colors.white,
+                      color: AppMainColors.whiteColor,
                       size: 18,
                     ),
                   ),
@@ -261,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
           content: TextWidget(
             label: "You cant send multiple messages at a time",
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppMainColors.redColor,
         ),
       );
       return;
@@ -272,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen> {
           content: TextWidget(
             label: "Please type a message",
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppMainColors.redColor,
         ),
       );
       return;
@@ -289,12 +287,11 @@ class _ChatScreenState extends State<ChatScreen> {
           msg: msg, chosenModelId: modelsProvider.getCurrentModel);
       setState(() {});
     } catch (error) {
-      log("error $error");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: TextWidget(
           label: error.toString(),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: AppMainColors.redColor,
       ));
     } finally {
       setState(() {

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final getThemeData = {
-  AppTheme.lightTheme: ThemeData(
+  AppTheme.darkTheme: ThemeData(
     scaffoldBackgroundColor: AppMainColors.secondColor,
     primarySwatch: Colors.green,
     appBarTheme: AppBarTheme(

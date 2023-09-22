@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return MaterialApp(
               title: 'Chat GPT',
-              theme: getThemeData[AppTheme.lightTheme],
-              darkTheme: getThemeData[AppTheme.lightTheme],
+              theme: getThemeData[AppTheme.darkTheme],
+              darkTheme: getThemeData[AppTheme.darkTheme],
               themeMode: ThemeMode.light,
               debugShowCheckedModeBanner: false,
               home: const OnBoardingScreen(),
