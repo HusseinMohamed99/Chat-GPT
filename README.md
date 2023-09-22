@@ -1,16 +1,7 @@
-# chat_gpt
+# Chat GPT
 
-A new Flutter project.
+<p>
+  <img src="https://github.com/HusseinMohamed99/Chat-GPT/assets/84459939/ea7bd782-9518-4159-abf8-c31c82f58cf9" width="250" />
 
-## Getting Started
+  </p>
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
