@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 String baseUrl = "https://api.openai.com/v1";
 
 // Change ApiKey Every Hour!!
-String apiKey = "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";
+String apiKey = "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";
 
 class ApiService {
   static Future<List<ModelsModel>> getModels() async {

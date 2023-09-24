@@ -109,9 +109,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 itemCount: onBoarding.length,
               ),
             ),
-            const SizedBox(
-              height: 30,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
