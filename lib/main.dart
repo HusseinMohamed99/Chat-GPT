@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
               title: 'Chat GPT',
               theme: getThemeData[AppTheme.darkTheme],
               darkTheme: getThemeData[AppTheme.darkTheme],
-              themeMode: ThemeMode.light,
+              themeMode: ThemeMode.dark,
               debugShowCheckedModeBanner: false,
               home: const OnBoardingScreen(),
             );
